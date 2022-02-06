@@ -7,25 +7,31 @@ def mtl_translator(lat_to_morse,inp):
     outp = str()
     for i in range(len(inp)):
         if inp[i] != '/' and inp[i] != " ":
-            char += inp[i]
+            char += inp[i]      #Adding comma or point to variable
         else:
             for key in lat_to_morse:
-                if char == key:
-                    outp += str(lat_to_morse[char])
-                elif char not in lat_to_morse:    
-                    print("Char",char,"isn't in dictionary of morse code.")
-                    exit()
+                if char == key:     #Asking if it the variable of commas and points are in a dictionary
+                    outp += str(lat_to_morse[char])     #Adding value of dictionary on possition 'char'
+                elif char not in lat_to_morse:
+                    if char == str():   #Bug fix
+                        pass
+                    else:       #End of program if the variable isn't into dictionary
+                        print("Char",char,"isn't in dictionary of morse code.")
+                        exit()
             char = str()
+            #Check if there is the end of word or sentence
             if inp[i-1] == '/':
-                if inp[i-2] == '/':
+                if inp[i-2] == '/':     
                     outp = outp[:-1]
-                    outp += '. '
+                    outp += '. '    #End of sentence - adding point after word
                 else:
-                    outp += ' '
+                    outp += ' '     #End of word - adding space after word
+    #Capital letter at the beginning of the first sentence
     if (len(char))>0:
         outp += str(lat_to_morse[char])
     c = outp[0].capitalize()
     outp = outp.replace(outp[0],c,1)
+    #Capital letter at the beginning of the next sentence
     for j in range(len(outp)):
         if outp[j] == '.':
             try:
@@ -39,19 +45,21 @@ def mtl_translator(lat_to_morse,inp):
 def ltm_translator(morse_to_lat,inp):
     outp = str()
     for i in range(len(inp)):
+        #Asking on the end of word or end of sentence
         if inp[i] == " ":
             if inp[i-1] == ".":
                 pass
             else:
-                outp += str('/')
+                outp += str('/')    #End of one letter
         elif inp[i] == ".": 
-            outp += str('//')      
+            outp += str('//')   #End of one word
         else:    
+            #Asking it if letter is in dictionary 
             for key in morse_to_lat:
                 if inp[i] == key:
-                    outp += str(morse_to_lat[inp[i]])
-                    outp += str('/')
-                elif inp[i] not in morse_to_lat:  
+                    outp += str(morse_to_lat[inp[i]])   #Adding combination of commos and points
+                    outp += str('/')    #End of one letter
+                elif inp[i] not in morse_to_lat:     #End of program if the letter isn't in dictionary
                     print("Char",inp[i],"isn't in the dictionary of morse code.")
                     exit()
     return outp
@@ -88,8 +96,14 @@ try:
             outp = ltm_translator(morse_to_lat,inp)
             
         #Printing results in the terminal
-        print("Text in latin script:",inp_0[2:-2])
-        print("Text in morse code:",outp)
+        if outp[0] == "." or outp[0] == "-":
+            print("Text in latin script:",inp_0[2:-2])
+            print("Text in morse code:",outp)
+        else:
+            print("Text in morse code:",inp_0[2:-2])
+            print("Text in latin script:",outp)
+            
+            
             
         #Writing output to a file 'output.txt'
         file2.write(outp)
